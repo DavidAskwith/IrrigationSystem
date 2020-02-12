@@ -5,7 +5,7 @@ namespace IrigationSystem.Models
 {
     public class Plant
     {
-        public int Id  { get; set; }
+        public int PlantId  { get; set; }
 
         public byte[] Image { get; set; }
 
