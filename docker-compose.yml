@@ -3,11 +3,23 @@ services:
     ui:
         container_name: irigation-system-ui
         build: ./ui
-        command: sh -c "npm run serve"
+        command: sh -c 'npm run serve'
         volumes: 
             - './ui:/app'
             - '/app/node_modules'
         ports:
-            - '8081:8080'
+            - '8080:8080'
         working_dir: /app
+    api:
+        container_name: irigation-system-api
+        build: ./api
+        # 0.0.0.0 Due to watch failing with localhost
+        command: sh -c 'dotnet run watch --urls https://0.0.0.0O:5000'
+        volumes:
+            - './api:/app'
+        ports:
+            - '5000:5000'
+            - '5001:5001'
+        working_dir: /app
+
         

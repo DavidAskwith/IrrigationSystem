@@ -1,4 +1,5 @@
 TODO:node_module permissions.
+TODO: Docker image versions
 #Docker
 
 ##Commands
