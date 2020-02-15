@@ -7,3 +7,6 @@ TODO: Docker image versions
 * sudo docker-compose start (start all background)
 ###Vue
 * sudo docker-compose exec ui sh
+
+###dotnet
+* sudo docker-compose exec ui sh
