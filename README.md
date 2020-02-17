@@ -12,3 +12,9 @@ allow for docker to be run as user
 
 ###dotnet
 * sudo docker-compose exec ui sh
+
+#EF
+
+* Migration
+  * dotnet ef migrations add MigrationName
+  * dotnet ef database update
