@@ -8,6 +8,8 @@ namespace IrigationSystem.Models {
 
         public float HumidityThresholdHigh { get; set; }
 
+        public int PlantId { get; set; }
+
         public Plant Plant { get; set; }
     }
 }

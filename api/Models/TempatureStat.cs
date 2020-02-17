@@ -10,6 +10,8 @@ namespace IrigationSystem.Models
 
         public double  Tempature  { get; set; }
 
+        public int PlantId { get; set; }
+
         public Plant Plant { get; set; }
         
     }

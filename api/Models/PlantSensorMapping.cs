@@ -6,6 +6,8 @@ namespace IrigationSystem.Models
 
         public int SensorId { get; set; }
 
+        public int  PlantId { get; set; } 
+
         public Plant Plant { get; set; } 
     }
 }

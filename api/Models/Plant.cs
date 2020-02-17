@@ -18,11 +18,17 @@ namespace IrigationSystem.Models
         [MaxLength(100)]
         public string SubSpecies { get; set; }
 
-        public ICollection<WaterLog> WaterLogs { get; set; }
-
         public PlantSettings PlantSettings { get; set; }
 
         public PlantSensorMapping PlantSensorMapping { get; set; }
+
+        public ICollection<WaterLog> WaterLogs { get; set; }
+
+        public ICollection<SunStat> SunStats { get; set; }
+
+        public ICollection<TempatureStat> TempatureStats { get; set; }
+
+        public ICollection<HumidityStat> HumidityStats { get; set; }
 
     }
 }

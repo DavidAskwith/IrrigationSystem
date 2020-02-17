@@ -13,12 +13,8 @@ services:
     api:
         container_name: irigation-system-api
         build: ./api
+        #command: sh
         command: sh -c 'dotnet watch run --no-restore'
-        environment:
-            # enables watch
-            - DOTNET_USE_POLLING_FILE_WATCHER=1
-            # set to 0.0.0.0 because you can't acces via localhost in container
-            - ASPNETCORE_URLS=https://0.0.0.0:5000
         volumes:
             - './api:/app'
         ports:
