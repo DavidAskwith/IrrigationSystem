@@ -7,32 +7,25 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using IrigationSystem.Models;
+using IrigationSystem.Services;
 
 namespace IrigationSystem.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
-    public class PlantsController : ControllerBase
+    [Route("plants")]
+    public class PlantController : ControllerBase
     {
         // TODO: add cref for returns
 
-        private readonly ILogger<PlantsController> _logger;
+        private readonly ILogger<PlantController> logger;
+        private readonly IPlantService plantService;
 
-        public PlantsController(ILogger<PlantsController> logger)
+        public PlantController(
+                ILogger<PlantController> logger,
+                IPlantService plantService)
         {
-            _logger = logger;
-        }
-
-        /// <summary>
-        /// Get all plants.
-        /// </summary>
-        /// <returns>A collection of plants.</returns>
-        [HttpGet]
-        public async Task<IEnumerable<Plant>> GetAll()
-        {
-            using (var ctx = new IrigationSystemContext()){
-                return await ctx.Plants.ToListAsync();
-            }
+            this.logger = logger;
+            this.plantService = plantService;
         }
 
         /// <summary>
@@ -49,18 +42,33 @@ namespace IrigationSystem.Controllers
         }
 
         /// <summary>
-        /// Gets all plants in a range.
+        /// Gets all plants can be filtered by page page size defaults to 10.
         /// </summary>
-        /// <param name="start">Starting ID of a range of plants.</param>
-        /// <param name="end">Ending ID of a range of plants.</param>
+        /// <param name="page">Starting ID of a range of plants.</param>
+        /// <param name="pageSize">Ending ID of a range of plants.</param>
         /// <returns>Collection of plants.</returns>
-        [HttpGet("{start:int}/{end:int}")]
-        public async Task<IEnumerable<Plant>> GetRange(int start, int end)
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<Plant>>> GetAll([FromQuery]int? page, [FromQuery]int? pageSize)
         {
-            using (var ctx = new IrigationSystemContext()){
-                return await ctx.Plants.Skip(start - 1).Take(end).ToListAsync();
+            if (page == null && pageSize != null)
+                return BadRequest("page number must be set specified when specifying pageSize");
+
+            using (var ctx = new IrigationSystemContext())
+            {
+
+                if (page == null && pageSize == null)
+                {
+                    return await ctx.Plants.ToListAsync();
+                } 
+
             }
+
+            var plants = await plantService.GetPagedAsync((int)page, pageSize ?? 10);
+            return Ok(plants);
         }
+
 
         /// <summary>
         /// Updates a plant that already exists.

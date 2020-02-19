@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using IrigationSystem.Services;
 
 namespace IrigationSystem
 {
@@ -26,6 +27,7 @@ namespace IrigationSystem
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddSingleton<IPlantService, PlantService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
