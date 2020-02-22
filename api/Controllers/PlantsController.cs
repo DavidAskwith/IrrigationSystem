@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using IrigationSystem.Models;
+using IrigationSystem.Entities;
 using IrigationSystem.Services;
 
 namespace IrigationSystem.Controllers
 {
     [ApiController]
-    [Route("plants")]
+    [Route("[controller]")]
     public class PlantController : ControllerBase
     {
         // TODO: add cref for returns

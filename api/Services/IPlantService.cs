@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using IrigationSystem.Models;
+using IrigationSystem.Entities;
 
 namespace IrigationSystem.Services
 {

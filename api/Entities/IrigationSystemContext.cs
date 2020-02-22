@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace IrigationSystem.Models
+namespace IrigationSystem.Entities
 {
     public class IrigationSystemContext: DbContext
     {

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 
-namespace IrigationSystem.Models
+namespace IrigationSystem.Entities
 {
     public class Plant
     {

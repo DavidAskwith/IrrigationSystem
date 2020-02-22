@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using IrigationSystem.Models;
+using IrigationSystem.Entities;
 
 namespace IrigationSystem.Services
 {

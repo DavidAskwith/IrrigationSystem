@@ -1,6 +1,6 @@
  using System;
 
-namespace IrigationSystem.Models
+namespace IrigationSystem.Entities
 {
     public class Settings
     {
