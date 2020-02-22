@@ -30,6 +30,10 @@ namespace IrigationSystem.Entities
 
         public ICollection<HumidityStat> HumidityStats { get; set; }
 
+        public int UserId { get; set; }
+
+        public User User { get; set; }
+
     }
 }
 

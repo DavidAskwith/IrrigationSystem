@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IrigationSystem.Entities
 {
-    public class IrigationSystemContext: DbContext
+    public class DataContext: DbContext
     {
         public DbSet<Plant> Plants { get; set; }
 
@@ -21,20 +21,9 @@ namespace IrigationSystem.Entities
 
         public DbSet<WaterLog> WarterLogs { get; set; }
 
+        public DbSet<User> Users { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options.UseSqlite("Data Source=irigation-system.db");
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder){
-
-            #if DEBUG
-                modelBuilder.Entity<Plant>().HasData(
-                        new Plant() {
-                            PlantId = 1,
-                            Name = "Gary",
-                            Species = "Juniper",
-                            SubSpecies = "Really nice!"
-                        });
-            #endif
-        }
     }
 }

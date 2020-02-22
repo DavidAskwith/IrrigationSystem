@@ -24,7 +24,7 @@ namespace IrigationSystem.Services
             int start = pageSize * page - pageSize;
             int end = pageSize * page;
 
-            using (var ctx = new IrigationSystemContext())
+            using (var ctx = new DataContext())
             {
                 return await ctx.Plants.Skip(start).Take(end)
                   .Select(p => new Plant() {

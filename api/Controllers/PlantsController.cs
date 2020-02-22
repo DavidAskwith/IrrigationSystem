@@ -36,7 +36,7 @@ namespace IrigationSystem.Controllers
         [HttpGet("{id:int}")]
         public async Task<Plant> GetById(int id)
         {
-            using (var ctx = new IrigationSystemContext()){
+            using (var ctx = new DataContext()){
                 return await ctx.Plants.FirstOrDefaultAsync(p => p.PlantId == id);
             }
         }
@@ -55,7 +55,7 @@ namespace IrigationSystem.Controllers
             if (page == null && pageSize != null)
                 return BadRequest("page number must be set specified when specifying pageSize");
 
-            using (var ctx = new IrigationSystemContext())
+            using (var ctx = new DataContext())
             {
 
                 if (page == null && pageSize == null)
@@ -80,7 +80,7 @@ namespace IrigationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<Plant>> Update([FromBody]Plant plant)
         {
-            using (var ctx = new IrigationSystemContext()){
+            using (var ctx = new DataContext()){
 
                 if(ctx.Plants.All(p => p.PlantId != plant.PlantId))
                 {
@@ -106,7 +106,7 @@ namespace IrigationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<Plant>> Add([FromBody]Plant plant)
         {
-            using (var ctx = new IrigationSystemContext()){
+            using (var ctx = new DataContext()){
 
                 // TODO: Test it
                 if(ctx.Plants.Any(p => p.PlantId == plant.PlantId))
@@ -132,7 +132,7 @@ namespace IrigationSystem.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            using (var ctx = new IrigationSystemContext()){
+            using (var ctx = new DataContext()){
 
                 if(ctx.Plants.All(p => p.PlantId != id))
                 {

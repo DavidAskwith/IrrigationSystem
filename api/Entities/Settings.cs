@@ -7,5 +7,7 @@ namespace IrigationSystem.Entities
         public int SettingsId { get; set; }
 
         public DateTime WaterTime { get; set; }
+
+        public int UserId { get; set; }
     }
 }

@@ -4,6 +4,9 @@ using IrigationSystem.Entities;
 
 namespace IrigationSystem.Services
 {
+    /// <summary>
+    /// Defines the attributes a plant service must impliment.
+    /// </summary>
     public interface IPlantService
     {
         /// <summary>
