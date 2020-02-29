@@ -80,7 +80,7 @@ namespace IrigationSystem
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
 
-            services.AddSingleton<IPlantService, PlantService>();
+            services.AddScoped<IPlantService, PlantService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

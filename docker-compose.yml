@@ -13,8 +13,8 @@ services:
     api:
         container_name: irigation-system-api
         build: ./api
-        #command: sh
-        command: sh -c 'dotnet watch run --no-restore'
+        command: sh
+        #command: sh -c 'dotnet watch run --no-restore'
         volumes:
             - './api:/app'
         ports:

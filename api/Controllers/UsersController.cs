@@ -35,6 +35,26 @@ namespace IrigationSystem.Controllers
         }
 
         [AllowAnonymous]
+        [HttpPost("register")]
+        public IActionResult Register([FromBody]RegisterModel model)
+        {
+            // map model to entity
+            var user = _mapper.Map<User>(model);
+
+            try
+            {
+                // create user
+                _userService.Create(user, model.Password);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]AuthenticateModel model)
         {
@@ -69,26 +89,6 @@ namespace IrigationSystem.Controllers
             });
         }
 
-        [AllowAnonymous]
-        [HttpPost("register")]
-        public IActionResult Register([FromBody]RegisterModel model)
-        {
-            // map model to entity
-            var user = _mapper.Map<User>(model);
-
-            try
-            {
-                // create user
-                _userService.Create(user, model.Password);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -97,7 +97,7 @@ namespace IrigationSystem.Controllers
             return Ok(model);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{userId}")]
         public IActionResult Update(int userId, [FromBody]UpdateModel model)
         {
             // map model to entity and set id

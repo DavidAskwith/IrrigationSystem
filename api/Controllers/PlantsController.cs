@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,27 +7,52 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using IrigationSystem.Entities;
 using IrigationSystem.Services;
+using IrigationSystem.Helpers;
+using IrigationSystem.Models.Plants;
 
 namespace IrigationSystem.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
-    public class PlantController : ControllerBase
+    public class PlantsController : ControllerBase
     {
         // TODO: add cref for returns
 
-        private readonly ILogger<PlantController> logger;
-        private readonly IPlantService plantService;
+        private readonly ILogger<PlantsController> _logger;
+        private readonly IPlantService _plantService;
+        private readonly IMapper _mapper;
 
-        public PlantController(
-                ILogger<PlantController> logger,
+        public PlantsController(
+                ILogger<PlantsController> logger,
+                IMapper mapper,
                 IPlantService plantService)
         {
-            this.logger = logger;
-            this.plantService = plantService;
+            _logger = logger;
+            _mapper = mapper;
+            _plantService = plantService;
         }
+
+        /// <summary>
+        /// Creates a plant.
+        /// </summary>
+        /// <param name="plant">Plant that will created.</param>
+        /// <returns>Plant that was created.</returns>
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult> Create([FromBody]CreateUpdateModel model)
+        {
+            var plant = _mapper.Map<Plant>(model);
+
+            await _plantService.CreateAsync(plant);
+
+            return Ok("Plant Created.");
+        }
+
 
         /// <summary>
         /// Get a plant by ID.
@@ -65,7 +91,7 @@ namespace IrigationSystem.Controllers
 
             }
 
-            var plants = await plantService.GetPagedAsync((int)page, pageSize ?? 10);
+            var plants = await _plantService.GetPagedAsync((int)page, pageSize ?? 10);
             return Ok(plants);
         }
 
@@ -97,36 +123,10 @@ namespace IrigationSystem.Controllers
         }
 
         /// <summary>
-        /// Adds a plant.
+        /// Deleltes a plant.
         /// </summary>
-        /// <param name="plant">Plant that will added.</param>
-        /// <returns>Plant that was added.</returns>
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Plant>> Add([FromBody]Plant plant)
-        {
-            using (var ctx = new DataContext()){
-
-                // TODO: Test it
-                if(ctx.Plants.Any(p => p.PlantId == plant.PlantId))
-                {
-                    return BadRequest("Plant must be specified without an ID when adding.");
-                }
-
-                ctx.Plants.Add(plant);
-
-                await ctx.SaveChangesAsync();
-
-                return Created("TODO: Set to URL dynamically", plant);
-            }
-        }
-
-        /// <summary>
-        /// Adds a plant.
-        /// </summary>
-        /// <param name="plant">Plant that will added.</param>
-        /// <returns>Plant that was added.</returns>
+        /// <param name="plant">Plant that will deleted.</param>
+        /// <returns>Plant that was deleted.</returns>
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

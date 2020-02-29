@@ -1,6 +1,7 @@
 using AutoMapper;
 using IrigationSystem.Entities;
-using IrigationSystem.Models.Users;
+using plants = IrigationSystem.Models.Plants;
+using users = IrigationSystem.Models.Users;
 
 namespace IrigationSystem.Helpers
 {
@@ -14,11 +15,12 @@ namespace IrigationSystem.Helpers
         /// </summary>
         public AutoMapperProfile()
         {
-            CreateMap<User, UserModel>();
+            CreateMap<User, users.UserModel>();
+            CreateMap<users.RegisterModel, User>();
+            CreateMap<users.UpdateModel, User>();
 
-            CreateMap<RegisterModel, User>();
-
-            CreateMap<UpdateModel, User>();
+            CreateMap<plants.CreateUpdateModel, Plant>();
+            CreateMap<Plant, plants.PlantModel>();
         }
     }
 }
