@@ -13,10 +13,8 @@ services:
     api:
         container_name: irigation-system-api
         build: ./api
-        command: sh
-        #command: sh -c 'dotnet watch run --no-restore'
-        volumes:
-            - './api:/app'
+        command: $CMD
         ports:
             - '5000:5000'
         working_dir: /app
+        user: dockeruser:dockeruser
