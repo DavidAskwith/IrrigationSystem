@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#TODO: find a way to run container as a user thats not root
 # Allows for conditionally setting the comand variable
 case $1 in
 
@@ -16,15 +17,18 @@ case $1 in
 
             sh ) 
                 export CMD=sh
-                docker-compose run api ;;
+                docker-compose run api 
+                sudo chown -R $(id -u):$(id -g) ./api ;;
 
             build ) 
-                docker-compose build api ;;
+                docker-compose build api
+                sudo chown -R $(id -u):$(id -g) ./api ;;
         esac ;;
 
     ui )
         docker-compose up web ;;
 esac
+
 
 
 
