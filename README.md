@@ -1,17 +1,18 @@
 TODO:node_module permissions.
-TODO: Docker image versions
+TODO: Docker image versions check updates
 #Docker
 
 allow for docker to be run as user
 * sudo usermod -a -G docker dave                                                                                
-##Commands
+
 ###All
 * sudo docker-compose start (start all background)
 ###Vue
-* sudo docker-compose exec ui sh
 
 ###dotnet
-* sudo docker-compose exec ui sh
+
+* After removal of a ob and bin a restore must be run not just a image rebuild
+  * why Are volumes mounted later in the life cycle?
 
 #EF
 
