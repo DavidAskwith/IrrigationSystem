@@ -16,7 +16,7 @@ case $1 in
                 docker-compose run api ;;
 
             sh ) 
-                export CMD=sh
+                export CMD=bash
                 docker-compose run api 
                 sudo chown -R $(id -u):$(id -g) ./api ;;
 
