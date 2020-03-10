@@ -12,7 +12,7 @@ case $1 in
                 docker-compose up api ;;
 
             test ) 
-                export CMD="sh -c 'dotnet watchdotnet watch --project ./src/IrrigationSystem.csproj test --no-restore'"
+                export CMD="sh -c 'dotnet watch --project ./test/Test.csproj test --no-restore'"
                 docker-compose run api ;;
 
             sh ) 

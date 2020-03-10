@@ -33,7 +33,8 @@ namespace Irrigation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>();
+            services.AddDbContext<DataContext>(options => 
+                    options.UseSqlite("Data Source=irrigation-system.db"));
 
             services.AddControllers();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

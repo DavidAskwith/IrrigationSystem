@@ -3,8 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Irrigation.Entities
 {
-    public class DataContext: DbContext
+    public class DataContext : DbContext
     {
+        public DataContext()
+        { }
+
+        public DataContext(DbContextOptions<DataContext> options)
+            : base(options)
+        { }
+
         public DbSet<Plant> Plants { get; set; }
 
         public DbSet<PlantSensorMapping> PlantSensorMappings { get; set; }
@@ -22,8 +29,5 @@ namespace Irrigation.Entities
         public DbSet<WaterLog> WarterLogs { get; set; }
 
         public DbSet<User> Users { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=irigation-system.db");
     }
 }

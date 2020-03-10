@@ -1,5 +1,6 @@
 TODO:node_module permissions.
 TODO: Docker image versions check updates
+TODO: SQL server package dev only
 #Docker
 
 allow for docker to be run as user
@@ -19,3 +20,4 @@ allow for docker to be run as user
 * Migration
   * dotnet ef migrations add MigrationName
   * dotnet ef database update
+
