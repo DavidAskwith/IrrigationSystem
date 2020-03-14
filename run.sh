@@ -1,6 +1,24 @@
 #!/bin/bash
 
 #TODO: find a way to run container as a user thats not root
+
+# run all as default
+if [ -z "$2" ] ; 
+then 
+    export apiCMD="sh -c 'dotnet run'"
+    export uiCMD="sh -c 'npm run serve'"
+
+    if [ "$1" == "silent" ] ;
+    then
+        docker-compose start
+        exit
+    elif [ -z "$1" ] ; 
+    then
+        docker-compose up
+        exit
+    fi
+fi
+
 # Allows for conditionally setting the comand variable
 case $1 in
 
@@ -8,43 +26,61 @@ case $1 in
         case $2 in
 
             watch ) 
-                export CMD="sh -c 'dotnet watch --project ./src/IrrigationSystem.csproj run --no-restore'"
+                export apiCMD="sh -c 'dotnet watch --project ./src/IrrigationSystem.csproj run --no-restore'"
                 docker-compose up api ;;
 
             test ) 
-                export CMD="sh -c 'dotnet watch --project ./test/Test.csproj test --no-restore'"
+                export apiCMD="sh -c 'dotnet watch --project ./test/Test.csproj test --no-restore'"
                 docker-compose run api ;;
 
             sh ) 
-                export CMD=bash
+                export apiCMD=bash
                 docker-compose run api 
                 sudo chown -R $(id -u):$(id -g) ./api ;;
 
             build ) 
-                export CMD="sh -c 'dotnet build'"
-                docker-compose build api
+                export apiCMD="sh -c 'dotnet build'"
+                #TODO: Do I want to build docker
+                docker-compose run api
                 sudo chown -R $(id -u):$(id -g) ./api ;;
             * ) 
                 echo "Invalid commmand."
                 echo "Commands:"
-                echo "[sh | watch | test | build]" ;;
+                echo "[ sh | watch | test | build ]" ;;
 
         esac ;;
 
     ui )
-        docker-compose up web ;;
+        case $2 in
+            sh ) 
+                export uiCMD=sh
+                docker-compose run ui ;;
+            build ) 
+                export uiCMD="sh -c 'npm run build'"
+                docker-compose up ui ;;
+            * )
+                echo "Invalid commmand."
+                echo "Commands:"
+                echo "[ sh | build ]" ;;
+        esac ;;
+
     * )
         echo "Usage:"
+        echo ""
+        echo "All:"
+        echo "./run.sh"
+        echo ""
+        echo "Specific Component:"
         echo "./run.sh [component] [command]"
         echo ""
         echo "Components:"
-        echo "[ui | api]"
+        echo "[ ui | api ]"
         echo ""
         echo "Commands:"
         echo "api:"
-        echo "    [sh | watch | test | build]"
+        echo "[ sh | watch | test | build ]"
         echo " ui:"
-        echo "    []" ;;
+        echo "[ sh | build ]" ;;
 esac
 
 

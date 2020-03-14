@@ -11,12 +11,13 @@ namespace Test
     public class UserServiceTests
     {
         [Fact]
-        public void Update_CanUpdatePassword_True()
+        public void Update_UpdatePassword_Updated()
         {
-            using(var ctx = new TestDataContext())
+            using (var ctx = new TestDataContext())
             {
                 SeedUsers(ctx);
-                var user = new User(){
+                var user = new User()
+                {
                     UserId = 1,
                 };
                 var service = new UserService(ctx);
@@ -36,31 +37,34 @@ namespace Test
         }
 
         [Fact]
-        public void Update_()
+        public void Update_AddBlankUserName_AppException()
         {
-            using(var ctx = new TestDataContext())
+            using (var ctx = new TestDataContext())
             {
                 SeedUsers(ctx);
-                var user = new User(){
+                var user = new User()
+                {
                     UserId = 1,
+                    UserName = "",
+
                 };
                 var service = new UserService(ctx);
-                var preUpdateUser = ctx.Users
-                    .Where(u => u.UserId == user.UserId).First();
-                var expectedHash = preUpdateUser.PasswordHash;
-                var expectedSalt = preUpdateUser.PasswordSalt;
 
-                service.Update(user, "TestPassword");
+Exception ex = Assert.Throws<AuthenticationException>(() => services.Authenticate("user", "wrong"));
+    Assert.Equal("Authentication Failed", ex.Message);
+                try
+                {
+                    service.Update(user, "TestPassword");
+                }
+                catch (AppException)
+                {
+                }
 
-                var postUpdateUser = ctx.Users
-                    .Where(u => u.UserId == user.UserId).First();
-
-                Assert.True(postUpdateUser.PasswordHash == preUpdateUser.PasswordHash);
-                Assert.True(postUpdateUser.PasswordSalt == preUpdateUser.PasswordSalt);
+                Assert.Fail();
             }
         }
 
-        private void SeedUsers(DataContext context) 
+        private void SeedUsers(DataContext context)
         {
             var users = new List<User>() {
                 new User(){
