@@ -5,17 +5,29 @@ services:
         build: ./ui
         command: $uiCMD
         volumes: 
-            - './ui:/app'
-            - '/app/node_modules'
+            - ./ui:/app
+            - node_modules:/app/node_modules
         ports:
-            - '8080:8080'
+            - 8080:8080
         working_dir: /app
     api:
         container_name: irrigation-system-api
         build: ./api
         command: $apiCMD
         ports:
-            - '5000:5000'
+            - 5000:5000
         volumes:
-            - './api:/app'
+            - ./api:/app
+            # Stops dependancies from being added locally
+            - src_obj:/app/src/obj
+            - src_bin:/app/src/bin
+            - test_obj:/app/test/obj
+            - test_bin:/app/test/bin
         working_dir: /app
+volumes:
+    node_modules:
+    src_obj:
+    src_bin:
+    test_obj:
+    test_bin:
+

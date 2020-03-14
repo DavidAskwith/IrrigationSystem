@@ -31,8 +31,10 @@ namespace Test
                 var postUpdateUser = ctx.Users
                     .Where(u => u.UserId == user.UserId).First();
 
-                Assert.True(postUpdateUser.PasswordHash == preUpdateUser.PasswordHash);
-                Assert.True(postUpdateUser.PasswordSalt == preUpdateUser.PasswordSalt);
+                Assert.True(postUpdateUser.PasswordHash == preUpdateUser.PasswordHash, 
+                        "Password hash was not modified correctly");
+                Assert.True(postUpdateUser.PasswordSalt == preUpdateUser.PasswordSalt,
+                        "Password salt was not modified correctly");
             }
         }
 
@@ -50,17 +52,9 @@ namespace Test
                 };
                 var service = new UserService(ctx);
 
-Exception ex = Assert.Throws<AuthenticationException>(() => services.Authenticate("user", "wrong"));
-    Assert.Equal("Authentication Failed", ex.Message);
-                try
-                {
-                    service.Update(user, "TestPassword");
-                }
-                catch (AppException)
-                {
-                }
-
-                Assert.Fail();
+                Exception ex = Assert.Throws<AuthenticationException>(() => services.Authenticate("user", "wrong"));
+                Assert.Equal("Authentication Failed", ex.Message,
+                        "A user was added with a balnk username.");
             }
         }
 

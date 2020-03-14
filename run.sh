@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #TODO: find a way to run container as a user thats not root
+#TODO: add double project watch
 
 # run all as default
 if [ -z "$2" ] ; 
@@ -27,7 +28,7 @@ case $1 in
 
             watch ) 
                 export apiCMD="sh -c 'dotnet watch --project ./src/IrrigationSystem.csproj run --no-restore'"
-                docker-compose up api ;;
+                docker-compose run api ;;
 
             test ) 
                 export apiCMD="sh -c 'dotnet watch --project ./test/Test.csproj test --no-restore'"
