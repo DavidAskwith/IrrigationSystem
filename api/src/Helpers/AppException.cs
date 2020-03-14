@@ -7,7 +7,6 @@ namespace Irrigation.Helpers
     /// Custom exception class for throwing application specific exceptions (e.g. for validation) 
     /// that can be caught and handled within the application
     /// </summary>
-    // TODO: if you are using custom exception to identify app level exceptions is there a way to throw the normal type rebranded?
     public class AppException : Exception
     {
         public AppException() : base() {}

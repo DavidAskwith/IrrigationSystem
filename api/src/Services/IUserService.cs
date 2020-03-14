@@ -18,6 +18,6 @@ namespace Irrigation.Services
         // TODO: DELETE
         IEnumerable<User> GetAll();
 
-        ValueTask<User> GetByIdAsync(int userId);
+        Task<User> GetByIdAsync(int userId);
     }
 }

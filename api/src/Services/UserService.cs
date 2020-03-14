@@ -17,34 +17,18 @@ namespace Irrigation.Services
         }
 
         /// <inheritdoc/>
-        public User Authenticate(string username, string password)
-        {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return null;
-
-            var user = _context.Users.SingleOrDefault(x => x.Username == username);
-
-            // check if username exists
-            if (user == null)
-                return null;
-
-            // check if password is correct
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                return null;
-
-            // authentication successful
-            return user;
-        }
-
-        /// <inheritdoc/>
         public User Create(User user, string password)
         {
             // validation
             if (string.IsNullOrWhiteSpace(password))
-                throw new AppException("Password is required");
+                throw new UserCreationException("Password is required");
 
-            if (_context.Users.Any(x => x.Username == user.Username))
-                throw new AppException("Username \"" + user.Username + "\" is already taken");
+            if (string.IsNullOrWhiteSpace(user.UserName))
+                throw new UserCreationException("UserName is required");
+
+            // throw error if the new username is already taken
+            if (_context.Users.Any(x => x.UserName == user.UserName))
+                throw new UserCreationException($"UserName \"{user.UserName}\" is already taken");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -59,21 +43,41 @@ namespace Irrigation.Services
         }
 
         /// <inheritdoc/>
+        public User Authenticate(string username, string password)
+        {
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+                return null;
+
+            var user = _context.Users.SingleOrDefault(x => x.UserName == username);
+
+            // check if username exists
+            if (user == null)
+                return null;
+
+            // check if password is correct
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+                return null;
+
+            // authentication successful
+            return user;
+        }
+
+        /// <inheritdoc/>
         public void Update(User userParam, string password = null)
         {
             var user = _context.Users.Find(userParam.UserId);
 
             if (user == null)
-                throw new AppException("User not found");
+                throw new UserUpdateException("User not found");
 
             // update username if it has changed
-            if (!string.IsNullOrWhiteSpace(userParam.Username) && userParam.Username != user.Username)
+            if (!string.IsNullOrWhiteSpace(userParam.UserName) && userParam.UserName != user.UserName)
             {
                 // throw error if the new username is already taken
-                if (_context.Users.Any(x => x.Username == userParam.Username))
-                    throw new AppException("Username " + userParam.Username + " is already taken");
+                if (_context.Users.Any(x => x.UserName == userParam.UserName))
+                    throw new UserUpdateException($"UserName \"{userParam.UserName}\" is already taken");
 
-                user.Username = userParam.Username;
+                user.UserName = userParam.UserName;
             }
 
             // update user properties if provided
@@ -103,9 +107,9 @@ namespace Irrigation.Services
             return _context.Users;
         }
 
-        public ValueTask<User> GetByIdAsync(int userId)
+        public async Task<User> GetByIdAsync(int userId)
         {
-            return _context.Users
+            return await _context.Users
                 .FindAsync(userId);
         }
 
