@@ -28,7 +28,7 @@ case $1 in
 
             watch ) 
                 export apiCMD="sh -c 'dotnet watch --project ./src/IrrigationSystem.csproj run --no-restore'"
-                docker-compose run api ;;
+                docker-compose up api ;;
 
             test ) 
                 export apiCMD="sh -c 'dotnet watch --project ./test/Test.csproj test --no-restore'"

@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Irrigation.Services;
 using Irrigation.Entities;
@@ -44,8 +45,15 @@ namespace Irrigation.Controllers
             try
             {
                 // create user
-                _userService.Create(user, model.Password);
-                return Ok();
+                var returnedUser = _userService.Create(user, model.Password);
+
+                return Ok(new
+                {
+                    UserId = returnedUser.UserId,
+                    UserName = returnedUser.UserName,
+                    FirstName = returnedUser.FirstName,
+                    LastName = returnedUser.LastName,
+                });
             }
             catch (AppException ex)
             {
@@ -97,12 +105,12 @@ namespace Irrigation.Controllers
             return Ok(model);
         }
 
-        [HttpPut("{userId}")]
-        public IActionResult Update(int userId, [FromBody]UpdateModel model)
+        [HttpPut]
+        public IActionResult Update([FromBody]UpdateModel model)
         {
             // map model to entity and set id
             var user = _mapper.Map<User>(model);
-            user.UserId = userId;
+            user.UserId = int.Parse(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             try
             {

@@ -11,15 +11,11 @@ namespace Irrigation.Services
 {
     public class PlantService : IPlantService 
     {
-        private readonly ILogger<PlantService> _logger;
         private readonly DataContext _context;
 
 
-        public PlantService(
-                ILogger<PlantService> logger,
-                DataContext context)
+        public PlantService(DataContext context)
         {
-            _logger = logger;
             _context = context;
         }
 
