@@ -6,7 +6,7 @@
 # run all as default
 if [ -z "$2" ] ; 
 then 
-    export apiCMD="sh -c 'dotnet run'"
+    export apiCMD="sh -c 'dotnet run --project ./src/IrrigationSystem.csproj run --no-restore'"
     export uiCMD="sh -c 'npm run serve'"
 
     if [ "$1" == "silent" ] ;
@@ -59,10 +59,17 @@ case $1 in
             build ) 
                 export uiCMD="sh -c 'npm run build'"
                 docker-compose up ui ;;
+            test )
+                export uiCMD="sh -c 'npm run test:unit'"
+                docker-compose up ui ;;
+            watch )
+                export uiCMD="sh -c 'npm run serve'"
+                docker-compose up ui ;;
+
             * )
                 echo "Invalid commmand."
                 echo "Commands:"
-                echo "[ sh | build ]" ;;
+                echo "[ sh | watch | test | build ]" ;;
         esac ;;
 
     * )
@@ -81,7 +88,7 @@ case $1 in
         echo "api:"
         echo "[ sh | watch | test | build ]"
         echo " ui:"
-        echo "[ sh | build ]" ;;
+        echo "[ sh | watch | test | build ]" ;;
 esac
 
 
