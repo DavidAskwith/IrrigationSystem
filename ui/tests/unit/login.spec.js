@@ -2,10 +2,13 @@ import { expect } from 'chai';
 
 import { mount } from '@vue/test-utils';
 import Login from '@/views/Login.vue';
+import routes from '@/router/routes';
+import VueRouter from 'vue-router';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);
+Vue.use(VueRouter);
 
 describe('Login.vue form validation', () => {
   const isValidForm = (wrapper) => wrapper.vm.$refs.loginForm.validate();
@@ -15,8 +18,14 @@ describe('Login.vue form validation', () => {
     password: 'Testing1',
   };
 
+  // TODO: Breakout into a util file if applicable
   const wrapperFactory = () => {
-    const wrapper = mount(Login);
+    const router = new VueRouter({ routes });
+    const wrapper = mount(Login, {
+      Vue,
+      Vuetify,
+      router,
+    });
     wrapper.setData({ form: validFormData });
     return wrapper;
   };

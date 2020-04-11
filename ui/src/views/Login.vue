@@ -21,6 +21,7 @@
           />
         <div class="d-flex justify-end">
           <v-btn
+            :to="'register'"
             outlined
             class="mr-3"
             >Register</v-btn>

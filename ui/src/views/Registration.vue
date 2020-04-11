@@ -40,11 +40,13 @@
 
         <div class="d-flex justify-end">
           <v-btn
+            :to="'/'"
             outlined
             class="mr-3"
           >Login</v-btn>
-
-          <v-btn color="primary">Register</v-btn>
+          <v-btn
+            color="primary"
+            >Register</v-btn>
         </div>
 
     </v-form>

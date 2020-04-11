@@ -2,10 +2,13 @@ import { expect } from 'chai';
 
 import { mount } from '@vue/test-utils';
 import Registration from '@/views/Registration.vue';
+import routes from '@/router/routes';
+import VueRouter from 'vue-router';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);
+Vue.use(VueRouter);
 
 describe('Registration.vue form validation', () => {
   const isValidForm = (wrapper) => wrapper.vm.$refs.registerForm.validate();
@@ -17,8 +20,14 @@ describe('Registration.vue form validation', () => {
     fullName: 'Testing1',
   };
 
+  // TODO: Breakout into a util file if applicable
   const wrapperFactory = () => {
-    const wrapper = mount(Registration);
+    const router = new VueRouter({ routes });
+    const wrapper = mount(Registration, {
+      Vue,
+      Vuetify,
+      router,
+    });
     wrapper.setData({ form: validFormData });
     return wrapper;
   };
