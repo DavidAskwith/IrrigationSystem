@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { mount } from '@vue/test-utils';
-import Registration from '@/components/Registration.vue';
+import Registration from '@/views/Registration.vue';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 
