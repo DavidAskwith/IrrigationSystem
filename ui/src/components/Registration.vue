@@ -17,6 +17,7 @@
           />
 
         <v-text-field
+          ref="password"
           v-model="form.password"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :rules="[rules.required, validatePassword]"
@@ -27,6 +28,7 @@
           />
 
         <v-text-field
+          ref="confirmPassword"
           v-model="form.confirmPassword"
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
           :rules="[rules.required, validatePassword]"
@@ -77,16 +79,26 @@ export default {
         const { confirmPassword } = this.form;
         const { password } = this.form;
 
+        // Both passwords are not empty
         if (!!confirmPassword && !!password) {
-          const passwordsMatch = (confirmPassword === password)
-            || (!password || !confirmPassword);
-          return passwordsMatch || 'Passwords do not match.';
+          if (confirmPassword !== password) {
+            return 'Passwords do not match.';
+          }
         }
 
         const pattern = /^(?=.*[a-z])(?=.*[A-Z])((?=.*[0-9])|(?=.*[!@#$%^&*]))(?=.{8,})/g;
         return pattern.test(value)
-          || 'Must contains 8 characters with a capital, number or symbol.';
+          || 'Must contains 8 characters with a capital and a number or symbol.';
       };
+    },
+  },
+  watch: {
+    // Ensure the both passwords have the correct error message at all times
+    'form.password': async function password() {
+      this.$refs.confirmPassword.validate();
+    },
+    'form.confirmPassword': async function password() {
+      this.$refs.password.validate();
     },
   },
 };
