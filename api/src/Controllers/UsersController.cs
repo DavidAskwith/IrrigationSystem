@@ -50,7 +50,7 @@ namespace Irrigation.Controllers
                 return Ok(new
                 {
                     UserId = returnedUser.UserId,
-                    UserName = returnedUser.UserName,
+                    Email = returnedUser.Email,
                     FirstName = returnedUser.FirstName,
                     LastName = returnedUser.LastName,
                 });
@@ -66,10 +66,10 @@ namespace Irrigation.Controllers
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]AuthenticateModel model)
         {
-            var user = _userService.Authenticate(model.UserName, model.Password);
+            var user = _userService.Authenticate(model.Email, model.Password);
 
             if (user == null)
-                return BadRequest(new { message = "UserName or password is incorrect" });
+                return BadRequest(new { message = "Email or password is incorrect" });
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.JWTSigningSecret);
@@ -90,7 +90,7 @@ namespace Irrigation.Controllers
             return Ok(new
             {
                 UserId = user.UserId,
-                UserName = user.UserName,
+                Email = user.Email,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Token = tokenString
@@ -114,7 +114,7 @@ namespace Irrigation.Controllers
 
             try
             {
-                // update user 
+                // update user
                 _userService.Update(user, model.Password);
                 return Ok();
             }

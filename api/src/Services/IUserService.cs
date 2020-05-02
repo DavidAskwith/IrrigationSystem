@@ -9,7 +9,7 @@ namespace Irrigation.Services
     /// </summary>
     public interface IUserService
     {
-        User Authenticate(string username, string password);
+        User Authenticate(string email, string password);
 
         User Create(User user, string password);
 

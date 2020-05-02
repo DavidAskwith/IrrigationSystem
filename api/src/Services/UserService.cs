@@ -23,12 +23,12 @@ namespace Irrigation.Services
             if (string.IsNullOrWhiteSpace(password))
                 throw new UserCreationException("Password is required");
 
-            if (string.IsNullOrWhiteSpace(user.UserName))
-                throw new UserCreationException("UserName is required");
+            if (string.IsNullOrWhiteSpace(user.Email))
+                throw new UserCreationException("Email is required");
 
-            // throw error if the new username is already taken
-            if (_context.Users.Any(x => x.UserName == user.UserName))
-                throw new UserCreationException($"UserName \"{user.UserName}\" is already taken");
+            // throw error if the new email is already taken
+            if (_context.Users.Any(x => x.Email == user.Email))
+                throw new UserCreationException($"Email \"{user.Email}\" is already taken");
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
@@ -43,14 +43,14 @@ namespace Irrigation.Services
         }
 
         /// <inheritdoc/>
-        public User Authenticate(string username, string password)
+        public User Authenticate(string email, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = _context.Users.SingleOrDefault(x => x.UserName == username);
+            var user = _context.Users.SingleOrDefault(x => x.Email == email);
 
-            // check if username exists
+            // check if email exists
             if (user == null)
                 return null;
 
@@ -70,14 +70,14 @@ namespace Irrigation.Services
             if (user == null)
                 throw new UserUpdateException("User not found");
 
-            // update username if it has changed
-            if (!string.IsNullOrWhiteSpace(userParam.UserName) && userParam.UserName != user.UserName)
+            // update email if it has changed
+            if (!string.IsNullOrWhiteSpace(userParam.Email) && userParam.Email != user.Email)
             {
-                // throw error if the new username is already taken
-                if (_context.Users.Any(x => x.UserName == userParam.UserName))
-                    throw new UserUpdateException($"UserName \"{userParam.UserName}\" is already taken");
+                // throw error if the new email is already taken
+                if (_context.Users.Any(x => x.Email == userParam.Email))
+                    throw new UserUpdateException($"Email \"{userParam.Email}\" is already taken");
 
-                user.UserName = userParam.UserName;
+                user.Email = userParam.Email;
             }
 
             // update user properties if provided

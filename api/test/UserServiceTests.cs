@@ -32,7 +32,7 @@ namespace Test
                     UserId = 1,
                     FirstName = "Frank",
                     LastName = "Frankenstein",
-                    UserName = "FFrank",
+                    Email = "FFrank",
                     PasswordHash = _passwordHash,
                     PasswordSalt = _passwordSalt
                 },
@@ -40,7 +40,7 @@ namespace Test
                     UserId = 2,
                     FirstName = "Bill",
                     LastName = "Billington",
-                    UserName = "BBillington",
+                    Email = "BBillington",
                     PasswordHash = _passwordHash,
                     PasswordSalt = _passwordSalt
                 },
@@ -54,12 +54,12 @@ namespace Test
         [InlineData("", "ValidPassword")]
         [InlineData("  ", "ValidPassword")]
         [InlineData(null, "ValidPassword")]
-        [InlineData("ValidUsername", null)]
-        [InlineData("ValidUsername", "")]
-        [InlineData("ValidUsername", " ")]
-        // UserName exists
+        [InlineData("ValidEmail", null)]
+        [InlineData("ValidEmail", "")]
+        [InlineData("ValidEmail", " ")]
+        // Email exists
         [InlineData("FFrank", "ValidPassword")]
-        public void Create_InvalidUserNamePassword_UserCreationException(string userName, string password)
+        public void Create_InvalidEmailPassword_UserCreationException(string email, string password)
         {
             using (var ctx = new TestDataContext())
             {
@@ -69,17 +69,17 @@ namespace Test
                     UserId = 1,
                     FirstName = "Ted",
                     LastName = "Teddington",
-                    UserName = userName
+                    Email = email
                 };
                 var service = new UserService(ctx);
 
                 string expectedMsg;
                 if (string.IsNullOrWhiteSpace(password))
                     expectedMsg = "Password is required";
-                else if (userName == "FFrank")
-                    expectedMsg = $"UserName \"{userName}\" is already taken";
+                else if (email == "FFrank")
+                    expectedMsg = $"Email \"{email}\" is already taken";
                 else
-                    expectedMsg = "UserName is required";
+                    expectedMsg = "Email is required";
 
                 Exception ex = Assert.Throws<UserCreationException>(() => service.Create(user, password));
 
@@ -88,7 +88,7 @@ namespace Test
         }
 
         [Fact]
-        public void Create_ValidUserNamePassword_Created()
+        public void Create_ValidEmailPassword_Created()
         {
             using (var ctx = new TestDataContext())
             {
@@ -97,7 +97,7 @@ namespace Test
                 {
                     FirstName = "Ted",
                     LastName = "Teddington",
-                    UserName = "TTedington"
+                    Email = "TTedington"
                 };
                 var service = new UserService(ctx);
 
@@ -112,22 +112,22 @@ namespace Test
         [InlineData("", "")]
         [InlineData(" ", " ")]
         //needs valid hash [InlineData("FFrank", "InvalidPassword")]
-        [InlineData("InvalidUserName", "ValidPassword")]
-        public void Authenticate_InvalidUserNamePasswords_Null(string userName, string password)
+        [InlineData("InvalidEmail", "ValidPassword")]
+        public void Authenticate_InvalidEmailPasswords_Null(string email, string password)
         {
             using (var ctx = new TestDataContext())
             {
                 SeedUsers(ctx);
                 var service = new UserService(ctx);
 
-                var result =  service.Authenticate(userName, password);
+                var result =  service.Authenticate(email, password);
 
                 Assert.Null(result);
             }
         }
 
         [Fact]
-        public void Authenticate_ValidPasswordUserName_AutehenticatedUser()
+        public void Authenticate_ValidPasswordEmail_AutehenticatedUser()
         {
             using (var ctx = new TestDataContext())
             {
@@ -177,7 +177,7 @@ namespace Test
                     UserId = 1,
                     FirstName = "Test FirstName",
                     LastName = "Test LastName",
-                    UserName = "TestUserName",
+                    Email = "TestEmail",
                 };
                 var service = new UserService(ctx);
 
@@ -185,7 +185,7 @@ namespace Test
 
                 var postUpdateUser = ctx.Users
                     .Where(u => u.UserId == user.UserId).First();
-                Assert.Equal(postUpdateUser.UserName, user.UserName);
+                Assert.Equal(postUpdateUser.Email, user.Email);
                 Assert.Equal(postUpdateUser.FirstName, user.FirstName);
                 Assert.Equal(postUpdateUser.LastName, user.LastName);
             }
@@ -202,7 +202,7 @@ namespace Test
                     UserId = 1,
                     FirstName = string.Empty,
                     LastName = string.Empty,
-                    UserName = string.Empty,
+                    Email = string.Empty,
                     PasswordHash = new byte[] { 0x20, 0x20 },
                     PasswordSalt = new byte[] { 0x20, 0x20 },
                 };
@@ -212,7 +212,7 @@ namespace Test
 
                 var postUpdateUser = ctx.Users
                     .Where(u => u.UserId == user.UserId).First();
-                Assert.NotEqual(postUpdateUser.UserName, string.Empty);
+                Assert.NotEqual(postUpdateUser.Email, string.Empty);
                 Assert.NotEqual(postUpdateUser.FirstName, string.Empty);
                 Assert.NotEqual(postUpdateUser.LastName, string.Empty);
                 Assert.NotEqual(postUpdateUser.PasswordHash, user.PasswordHash);
@@ -231,7 +231,7 @@ namespace Test
                     UserId = 1,
                     FirstName = null,
                     LastName = null,
-                    UserName = null,
+                    Email = null,
                     PasswordHash = new byte[] { 0x20, 0x20 },
                     PasswordSalt = new byte[] { 0x20, 0x20 },
                 };
@@ -241,7 +241,7 @@ namespace Test
 
                 var postUpdateUser = ctx.Users
                     .Where(u => u.UserId == user.UserId).First();
-                Assert.NotNull(postUpdateUser.UserName);
+                Assert.NotNull(postUpdateUser.Email);
                 Assert.NotNull(postUpdateUser.FirstName);
                 Assert.NotNull(postUpdateUser.LastName);
                 Assert.NotEqual(postUpdateUser.PasswordHash, user.PasswordHash);
@@ -267,7 +267,7 @@ namespace Test
         }
 
         [Fact]
-        public void Update_UserNameTaken_UserUpdateException()
+        public void Update_EmailTaken_UserUpdateException()
         {
             using (var ctx = new TestDataContext())
             {
@@ -275,12 +275,12 @@ namespace Test
                 var user = new User()
                 {
                     UserId = 1,
-                    UserName = "BBillington",
+                    Email = "BBillington",
                 };
                 var service = new UserService(ctx);
 
                 Exception ex = Assert.Throws<UserUpdateException>(() => service.Update(user));
-                Assert.Equal($"UserName \"{user.UserName}\" is already taken", ex.Message);
+                Assert.Equal($"Email \"{user.Email}\" is already taken", ex.Message);
             }
         }
 
