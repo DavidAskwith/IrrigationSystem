@@ -1,11 +1,17 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import routes from './routes';
+import { routes, beforeEachCallback } from './routes';
 
 Vue.use(VueRouter);
 
-export default new VueRouter({
+const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  beforeEachCallback(to, from, next, localStorage);
+});
+
+export default router;

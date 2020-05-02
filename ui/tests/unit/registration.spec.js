@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { mount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
 import Registration from '@/views/Registration.vue';
 import routes from '@/router/routes';
 import VueRouter from 'vue-router';
@@ -8,30 +8,33 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 
 Vue.use(Vuetify);
-Vue.use(VueRouter);
+
+const localVue = createLocalVue();
+localVue.use(VueRouter);
+
+const isValidForm = (wrapper) => wrapper.vm.$refs.registerForm.validate();
+
+const validFormData = {
+  email: 'gary@gmail.com',
+  password: 'Testing1',
+  confirmPassword: 'Testing1',
+  fullName: 'Testing1',
+};
+
+// TODO: Breakout into a util file if applicable
+const wrapperFactory = () => {
+  const vuetify = new Vuetify();
+  const router = new VueRouter({ routes });
+  const wrapper = mount(Registration, {
+    localVue,
+    vuetify,
+    router,
+  });
+  wrapper.setData({ form: validFormData });
+  return wrapper;
+};
 
 describe('Registration.vue form validation', () => {
-  const isValidForm = (wrapper) => wrapper.vm.$refs.registerForm.validate();
-
-  const validFormData = {
-    email: 'gary@gmail.com',
-    password: 'Testing1',
-    confirmPassword: 'Testing1',
-    fullName: 'Testing1',
-  };
-
-  // TODO: Breakout into a util file if applicable
-  const wrapperFactory = () => {
-    const router = new VueRouter({ routes });
-    const wrapper = mount(Registration, {
-      Vue,
-      Vuetify,
-      router,
-    });
-    wrapper.setData({ form: validFormData });
-    return wrapper;
-  };
-
   beforeEach(() => {
     // Resolves error do not remove
     global.requestAnimationFrame = (cb) => cb();

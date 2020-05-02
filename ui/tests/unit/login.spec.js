@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-
 import { mount } from '@vue/test-utils';
 import Login from '@/views/Login.vue';
 import routes from '@/router/routes';
