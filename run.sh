@@ -4,17 +4,20 @@
 #TODO: add double project watch
 
 # run all as default
-if [ -z "$2" ] ; 
-then 
-    export apiCMD="sh -c 'dotnet run --project ./src/IrrigationSystem.csproj run --no-restore'"
-    export uiCMD="sh -c 'npm run serve'"
+if [ -z "$2" ] ;
+then
+    if [ "$1" == "watch" ] ;
+    then
+        export apiCMD="sh -c 'dotnet watch --project ./src/IrrigationSystem.csproj run --no-restore'"
+        export uiCMD="sh -c 'npm run serve'"
 
-    if [ "$1" == "silent" ] ;
-    then
-        docker-compose start
+        docker-compose up
         exit
-    elif [ -z "$1" ] ; 
+    elif [ -z "$1" ] ;
     then
+        export apiCMD="sh -c 'dotnet run --project ./src/IrrigationSystem.csproj run --no-restore'"
+        export uiCMD="sh -c 'npm run serve'"
+
         docker-compose up
         exit
     fi
@@ -26,25 +29,25 @@ case $1 in
     api )
         case $2 in
 
-            watch ) 
+            watch )
                 export apiCMD="sh -c 'dotnet watch --project ./src/IrrigationSystem.csproj run --no-restore'"
                 docker-compose up api ;;
 
-            test ) 
+            test )
                 export apiCMD="sh -c 'dotnet watch --project ./test/Test.csproj test --no-restore'"
                 docker-compose run api ;;
 
-            sh ) 
+            sh )
                 export apiCMD=bash
-                docker-compose run api 
+                docker-compose run api
                 sudo chown -R $(id -u):$(id -g) ./api ;;
 
-            build ) 
+            build )
                 export apiCMD="sh -c 'dotnet build'"
                 #TODO: Do I want to build docker
                 docker-compose run api
                 sudo chown -R $(id -u):$(id -g) ./api ;;
-            * ) 
+            * )
                 echo "Invalid commmand."
                 echo "Commands:"
                 echo "[ sh | watch | test | build ]" ;;
@@ -53,10 +56,10 @@ case $1 in
 
     ui )
         case $2 in
-            sh ) 
+            sh )
                 export uiCMD=sh
                 docker-compose run ui ;;
-            build ) 
+            build )
                 export uiCMD="sh -c 'npm run build'"
                 docker-compose up ui ;;
             test )

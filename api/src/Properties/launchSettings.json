@@ -21,7 +21,7 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "irrigationsystem",
-      "applicationUrl": "https://0.0.0.0:5000",
+      "applicationUrl": "http://0.0.0.0:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOTNET_USE_POLLING_FILE_WATCHER" : 1

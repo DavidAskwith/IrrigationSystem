@@ -41,7 +41,7 @@
         <div class="d-flex justify-end">
           <v-btn
             :to="'/'"
-            outlined
+            text
             class="mr-3"
           >Login</v-btn>
           <v-btn

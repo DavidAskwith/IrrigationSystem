@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -33,7 +34,7 @@ namespace Irrigation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(options => 
+            services.AddDbContext<DataContext>(options =>
                     options.UseSqlite("Data Source=irrigation-system.db"));
 
             services.AddControllers();
@@ -85,17 +86,27 @@ namespace Irrigation
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<AppSettings> appSettings)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            // TODO: what is this used for 
-            app.UseHttpsRedirection();
+            // TODO: Renable when https is enabled
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            if(!String.IsNullOrEmpty(appSettings.Value.AllowedOrigins))
+            {
+                var origins = appSettings.Value.AllowedOrigins.Split(";");
+                app.UseCors(x => x
+                        .WithOrigins(origins)
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                        .AllowAnyHeader());
+            }
 
             app.UseAuthentication();
             app.UseAuthorization();

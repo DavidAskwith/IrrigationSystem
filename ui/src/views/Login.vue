@@ -1,6 +1,9 @@
 <template>
   <v-container>
-    <v-form ref="loginForm">
+    <v-form
+      ref="loginForm"
+      v-model="validForm"
+      @submit.prevent="handleSubmit">
         <v-text-field
           v-model="form.email"
           label="Email"
@@ -22,11 +25,12 @@
         <div class="d-flex justify-end">
           <v-btn
             :to="'register'"
-            outlined
+            text
             class="mr-3"
             >Register</v-btn>
           <v-btn
             color="primary"
+            type="submit"
             >Login</v-btn>
 
         </div>
@@ -35,10 +39,13 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
   name: 'Login',
 
   data: () => ({
+    validForm: false,
     showPassword: false,
     form: {
       email: '',
@@ -53,5 +60,26 @@ export default {
       },
     },
   }),
+
+  computed: {
+    ...mapState('user', ['status']),
+  },
+
+  created() {
+    // reset login status
+    this.logout();
+  },
+
+  methods: {
+    ...mapActions('user', ['login', 'logout']),
+    handleSubmit() {
+      this.$refs.loginForm.validate();
+      const { email, password } = this.form;
+
+      if (this.validForm) {
+        this.login({ email, password });
+      }
+    },
+  },
 };
 </script>

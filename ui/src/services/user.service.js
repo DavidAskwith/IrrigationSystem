@@ -17,34 +17,41 @@ const handleResponse = (response) => response.text().then((text) => {
   return data;
 });
 
+const storeUser = (user, storage) => {
+  if (user.token) {
+    storage.setItem('user', JSON.stringify(user));
+  }
+};
+
 const login = async (email, password, storage) => {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   };
+  console.log(JSON.stringify({ email, password }));
 
   const response = await fetch(`${config.apiUrl}/users/authenticate`, requestOptions);
   const user = await handleResponse(response);
 
-  // login successful if there's a jwt token in the response
-  if (user.token) {
-    // store user details and jwt token in local storage to keep
-    // user logged in between page refreshes
-    storage.setItem('user', JSON.stringify(user));
-  }
+  storeUser(user, storage);
 
   return user;
 };
 
-const register = (user) => {
+const register = async (user, storage) => {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(user),
   };
 
-  return fetch(`${config.apiUrl}/users/register`, requestOptions).then(handleResponse);
+  const response = await fetch(`${config.apiUrl}/users/register`, requestOptions);
+  const localUser = await handleResponse(response);
+
+  storeUser(localUser, storage);
+
+  return localUser;
 };
 
 const update = (user, storage) => {
