@@ -52,31 +52,15 @@ describe('User Service', () => {
   });
 
   it('Register should return a user', async () => {
-    const localStorage = localStorageMock();
     const user = users[0];
 
     nock(config.apiUrl)
       .post('/users/register')
       .reply(200, user);
 
-    const result = await userService.register(user, localStorage);
+    const result = await userService.register(user);
 
     expect(result).to.eql(user);
-  });
-
-  it('Register should add a user to localStorage', async () => {
-    const localStorage = localStorageMock();
-    const user = users[0];
-
-    nock(config.apiUrl)
-      .post('/users/register')
-      .reply(200, user);
-
-    await userService.register(user, localStorage);
-    const result = localStorage.getItem('user');
-    const expected = JSON.stringify(users[0]);
-
-    expect(result).to.eql(expected);
   });
 
   it('Update should return a user', async () => {

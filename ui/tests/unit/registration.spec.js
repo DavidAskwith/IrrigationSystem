@@ -18,7 +18,8 @@ const validFormData = {
   email: 'gary@gmail.com',
   password: 'Testing1',
   confirmPassword: 'Testing1',
-  fullName: 'Testing1',
+  firstName: 'Testing1',
+  lastName: 'Testing1',
 };
 
 // TODO: Breakout into a util file if applicable
@@ -165,10 +166,10 @@ describe('Registration.vue form validation', () => {
   });
 
   // Full Name
-  it('Should require Full Name', async () => {
+  it('Should require First Name', async () => {
     const wrapper = wrapperFactory();
 
-    wrapper.vm.form.fullName = '';
+    wrapper.vm.form.firstName = '';
 
     await wrapper.vm.$nextTick();
     expect(isValidForm(wrapper)).to.be.false;

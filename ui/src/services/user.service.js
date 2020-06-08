@@ -29,7 +29,6 @@ const login = async (email, password, storage) => {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   };
-  console.log(JSON.stringify({ email, password }));
 
   const response = await fetch(`${config.apiUrl}/users/authenticate`, requestOptions);
   const user = await handleResponse(response);
@@ -39,7 +38,7 @@ const login = async (email, password, storage) => {
   return user;
 };
 
-const register = async (user, storage) => {
+const register = async (user) => {
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -48,8 +47,6 @@ const register = async (user, storage) => {
 
   const response = await fetch(`${config.apiUrl}/users/register`, requestOptions);
   const localUser = await handleResponse(response);
-
-  storeUser(localUser, storage);
 
   return localUser;
 };

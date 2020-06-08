@@ -80,6 +80,7 @@ case $1 in
         echo ""
         echo "All:"
         echo "./run.sh"
+        echo "[ watch | ]"
         echo ""
         echo "Specific Component:"
         echo "./run.sh [component] [command]"

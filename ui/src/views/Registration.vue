@@ -1,13 +1,28 @@
 <template>
-  <v-container>
-    <v-form ref="registerForm">
+  <v-container
+    class="d-flex justify-center">
+    <v-form
+      ref="registerForm"
+      @submit.prevent="handleSubmit"
+      v-model="validForm"
+      :style="{'width': formWidth }">
+        <v-img
+          src="../assets/Logo.jpg"
+          width="200"
+          height="125"
+          style="margin: 50px auto 50px auto;"
+          ></v-img>
         <v-text-field
-          v-model="form.fullName"
-          label="Full Name"
+          v-model="form.firstName"
+          label="First Name"
           :rules="[rules.required]"
           single-line
           />
-
+        <v-text-field
+          v-model="form.lastName"
+          label="Last Name"
+          single-line
+          />
         <v-text-field
           v-model="form.email"
           label="Email"
@@ -46,6 +61,7 @@
           >Login</v-btn>
           <v-btn
             color="primary"
+            type="submit"
             >Register</v-btn>
         </div>
 
@@ -54,13 +70,18 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+import userFactory from '@/models/user';
+
 export default {
   name: 'Registration',
 
   data: () => ({
+    validForm: false,
     showPassword: false,
     form: {
-      fullName: '',
+      firstName: '',
+      LastName: '',
       email: '',
       password: '',
       confirmPassword: '',
@@ -76,6 +97,7 @@ export default {
   }),
 
   computed: {
+    ...mapState('user', ['status']),
     validatePassword() {
       return (value) => {
         const { confirmPassword } = this.form;
@@ -93,7 +115,27 @@ export default {
           || 'Must contains 8 characters with a capital and a number or symbol.';
       };
     },
+
+    formWidth() {
+      let width;
+      switch (this.$vuetify.breakpoint.name) {
+        case 'xs':
+        case 'sm':
+          width = '100%';
+          break;
+        case 'md':
+        case 'lg':
+          width = '60%';
+          break;
+        case 'xl':
+          width = '40%';
+          break;
+        default: '100%';
+      }
+      return width;
+    },
   },
+
   watch: {
     // Ensure the both passwords have the correct error message at all times
     'form.password': async function password() {
@@ -101,6 +143,18 @@ export default {
     },
     'form.confirmPassword': async function password() {
       this.$refs.password.validate();
+    },
+  },
+
+  methods: {
+    ...mapActions('user', ['register']),
+    handleSubmit() {
+      this.$refs.registerForm.validate();
+      const user = userFactory(this.form);
+
+      if (this.validForm) {
+        this.register(user);
+      }
     },
   },
 };

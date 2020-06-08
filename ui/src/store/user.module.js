@@ -13,7 +13,7 @@ const actions = {
     userService.login(email, password, localStorage)
       .then(
         (user) => {
-          commit('success', user);
+          commit('successLogin', user);
           router.push('/');
         },
         (error) => {
@@ -29,10 +29,10 @@ const actions = {
   register({ dispatch, commit }, user) {
     commit('request', user);
 
-    userService.register(user, localStorage)
+    userService.register(user)
       .then(
         (user) => {
-          commit('success', user);
+          commit('successRegister', user);
           router.push('/login');
         },
         (error) => {
@@ -48,8 +48,12 @@ const mutations = {
     state.status = { loggingIn: true };
     state.user = user;
   },
-  success(state, user) {
+  successLogin(state, user) {
     state.status = { loggedIn: true };
+    state.user = user;
+  },
+  successRegister(state, user) {
+    state.status = { registered: true };
     state.user = user;
   },
   failure(state) {
