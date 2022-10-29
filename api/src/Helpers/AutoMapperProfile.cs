@@ -19,7 +19,7 @@ namespace Irrigation.Helpers
             CreateMap<users.RegisterModel, User>();
             CreateMap<users.UpdateModel, User>();
 
-            CreateMap<plants.CreateUpdateModel, Plant>();
+            CreateMap<plants.PlantModel, Plant>();
             CreateMap<Plant, plants.PlantModel>();
         }
     }

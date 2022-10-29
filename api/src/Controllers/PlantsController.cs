@@ -50,7 +50,7 @@ namespace Irrigation.Controllers
 
             await _plantService.CreateAsync(plant);
 
-            return Ok("Plant Created.");
+            return Ok(plant);
         }
 
 
@@ -60,11 +60,11 @@ namespace Irrigation.Controllers
         /// <param name="id">ID of a specific plant.</param>
         /// <returns>A single plant.</returns>
         [HttpGet("{id:int}")]
-        public async Task<Plant> GetById(int id)
+        public async Task<ActionResult<Plant>> GetById(int id)
         {
-            using (var ctx = new DataContext()){
-                return await ctx.Plants.FirstOrDefaultAsync(p => p.PlantId == id);
-            }
+            var plant = await _plantService.GetByIdAsync(id);
+            var model = _mapper.Map<PlantModel>(plant);
+            return Ok(model);
         }
 
         /// <summary>
@@ -78,21 +78,22 @@ namespace Irrigation.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<Plant>>> GetAll([FromQuery]int? page, [FromQuery]int? pageSize)
         {
+            // TODO: Page size limit
             if (page == null && pageSize != null)
                 return BadRequest("page number must be set specified when specifying pageSize");
 
-            using (var ctx = new DataContext())
+            IEnumerable<Plant> plants;
+
+            if (page == null && pageSize == null)
             {
-
-                if (page == null && pageSize == null)
-                {
-                    return await ctx.Plants.ToListAsync();
-                } 
-
+                plants = await _plantService.GetAllAsync();
             }
-
-            var plants = await _plantService.GetPagedAsync((int)page, pageSize ?? 10);
-            return Ok(plants);
+            else
+            {
+                plants = await _plantService.GetPagedAsync((int)page, pageSize ?? 10);
+            }
+            var model = _mapper.Map<IList<PlantModel>>(plants);
+            return Ok(model);
         }
 
 
@@ -104,26 +105,21 @@ namespace Irrigation.Controllers
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Plant>> Update([FromBody]Plant plant)
+        public async Task<ActionResult<Plant>> Update([FromBody]PlantModel model)
         {
-            using (var ctx = new DataContext()){
+            // TODO: breakout
+            var plantDoesNotExist = await _plantService.GetByIdAsync(model.PlantId) == null;
+            if (plantDoesNotExist)
+                return NotFound("Plant with the specified ID does not exist.");
 
-                if(ctx.Plants.All(p => p.PlantId != plant.PlantId))
-                {
-                    return NotFound("Plant with the specified ID does not exist.");
-                }
+            var plant = _mapper.Map<Plant>(model);
+            await _plantService.UpdateAsync(plant);
 
-                ctx.Plants.Update(plant);
-
-
-                await ctx.SaveChangesAsync();
-
-                return new OkObjectResult(plant);
-            }
+            return new OkObjectResult(plant);
         }
 
         /// <summary>
-        /// Deleltes a plant.
+        /// Deletes a plant.
         /// </summary>
         /// <param name="plant">Plant that will deleted.</param>
         /// <returns>Plant that was deleted.</returns>
@@ -132,19 +128,14 @@ namespace Irrigation.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            using (var ctx = new DataContext()){
+            // TODO: breakout
+            var plantDoesNotExist = await _plantService.GetByIdAsync(id) == null;
+            if (plantDoesNotExist)
+                return NotFound("Plant with the specified ID does not exist.");
 
-                if(ctx.Plants.All(p => p.PlantId != id))
-                {
-                    return NotFound("Plant with the specified ID does not exist.");
-                }
+            await _plantService.DeleteAsync(id);
 
-                ctx.Plants.Remove(ctx.Plants.Find(id));
-
-                await ctx.SaveChangesAsync();
-
-                return NoContent();
-            }
+            return NoContent();
         }
 
     }

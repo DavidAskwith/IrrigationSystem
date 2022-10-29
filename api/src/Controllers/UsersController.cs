@@ -77,7 +77,7 @@ namespace Irrigation.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.UserId.ToString())
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
                 }),
                 //TODO: Will this cause need to re authentication?
                 Expires = DateTime.UtcNow.AddDays(7),

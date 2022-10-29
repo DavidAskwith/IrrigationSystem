@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,7 +60,7 @@ namespace Irrigation
                     OnTokenValidated = async ctx =>
                     {
                         var userService = ctx.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(ctx.Principal.Identity.Name);
+                        var userId = int.Parse(ctx.Principal.Claims.First(c => c.Type == ClaimTypes.NameIdentifier).Value);
                         var user = await userService.GetByIdAsync(userId);
                         if (user == null)
                         {
@@ -78,6 +79,8 @@ namespace Irrigation
                     ValidateAudience = false
                 };
             });
+
+            services.AddHttpContextAccessor();
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
@@ -100,6 +103,7 @@ namespace Irrigation
 
             if(!String.IsNullOrEmpty(appSettings.Value.AllowedOrigins))
             {
+                // TODO: should use json obj
                 var origins = appSettings.Value.AllowedOrigins.Split(";");
                 app.UseCors(x => x
                         .WithOrigins(origins)

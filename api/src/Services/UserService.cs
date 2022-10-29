@@ -7,6 +7,7 @@ using Irrigation.Helpers;
 
 namespace Irrigation.Services
 {
+    //TODO: async
     public class UserService : IUserService
     {
         private readonly DataContext _context;
