@@ -1,18 +1,14 @@
-TODO:node_module permissions.
-TODO: Docker image versions check updates
-TODO: SQL server package dev only
+# Docker
 
-#Docker
-
-allow for docker to be run as user
+### Allow for docker to be run as non root user
 * sudo usermod -a -G docker dave                                                                                
 
-###dotnet
+### dotnet
 
 * After removal of a db and bin a restore must be run not just a image rebuild
   * why Are volumes mounted later in the life cycle?
 
-#EF
+# EF
 
 * Migration
   * dotnet ef migrations add MigrationName
