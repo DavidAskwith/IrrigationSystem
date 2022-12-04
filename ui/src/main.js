@@ -7,6 +7,12 @@ import vuetify from './plugins/vuetify';
 import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import '@mdi/font/css/materialdesignicons.css';
 
+import header from './components/Header.vue';
+import footer from './components/Footer.vue';
+
+Vue.component('Header', header);
+Vue.component('Footer', footer);
+
 Vue.config.productionTip = false;
 
 new Vue({

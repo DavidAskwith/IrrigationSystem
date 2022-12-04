@@ -1,12 +1,13 @@
 import Registration from '../views/Registration.vue';
 import Login from '../views/Login.vue';
-import Home from '../views/Home.vue';
+import Plants from '../views/Plants.vue';
+import AddPlant from '../views/AddPlant.vue';
 
 export const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'Plants',
+    component: Plants,
   },
   {
     path: '/login',
@@ -17,6 +18,11 @@ export const routes = [
     path: '/register',
     name: 'Registration',
     component: Registration,
+  },
+  {
+    path: '/add-plant',
+    name: 'AddPlant',
+    component: AddPlant,
   },
   {
     path: '*',

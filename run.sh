@@ -1,7 +1,6 @@
 #!/bin/bash
 
 #TODO: find a way to run container as a user thats not root
-#TODO: add double project watch
 
 # run all as default
 if [ -z "$2" ] ;

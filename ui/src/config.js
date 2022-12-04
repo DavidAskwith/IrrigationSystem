@@ -1,3 +1,3 @@
 export default {
-  apiUrl: 'http://0.0.0.0:5000',
+  apiUrl: 'http://192.168.0.145:5000',
 };
